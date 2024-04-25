@@ -1,0 +1,27 @@
+name: "linux-arm64-d-template"
+on: push
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: pguyot/arm-runner-action@v2
+      id: build_image
+      with:
+        base_image: raspios_lite_arm64:latest
+        image_additional_mb: 2048
+        commands: |
+          df -H .
+          sudo apt-get install build-essential scons pkg-config libx11-dev libxcursor-dev libxinerama-dev libgl1-mesa-dev libglu-dev libasound2-dev libpulse-dev libudev-dev libxi-dev libxrandr-dev -y
+          scons arch=arm64 target=template_debug
+    - name: Move image
+      run: |
+        mv ${{ steps.build_image.outputs.image }} release.img
+        xz -0 -T 0 -v release.img
+    - name: Tree
+      run: tree
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: Release img
+        path: release.img.xz
