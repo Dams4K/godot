@@ -8,10 +8,13 @@ jobs:
     - uses: pguyot/arm-runner-action@v2
       id: build_image
       with:
-        base_image: raspios_lite_arm64:2022-04-04
+        base_image: raspios_lite_arm64:2022-01-28
         image_additional_mb: 2048
         commands: |
           df -H .
+          sudo apt update -y
+          sudo apt upgrade -y
+          sudo apt dist-upgrade -y
           sudo apt-get install build-essential scons pkg-config libx11-dev libxcursor-dev libxinerama-dev libgl1-mesa-dev libglu-dev libasound2-dev libpulse-dev libudev-dev libxi-dev libxrandr-dev -y
           scons arch=arm64 target=template_debug
     - name: Move image
