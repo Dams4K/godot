@@ -8,7 +8,7 @@ jobs:
     - uses: pguyot/arm-runner-action@v2
       id: build_image
       with:
-        base_image: raspios_lite_arm64:latest
+        base_image: raspios_lite_arm64:2022-01-28
         image_additional_mb: 2048
         commands: |
           df -H .
